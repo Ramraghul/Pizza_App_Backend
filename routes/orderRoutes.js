@@ -9,11 +9,14 @@ const Order = require("../models/orderModel");
 
 router.post("/placeorder", async (req, res) => {
   const { token, subTotal, currentUser, cartItems } = req.body;
+  // console.log(req.body);
+
   try {
     const customer = await stripe.customers.create({
       email: token.email,
       source: token.id,
     });
+
     const paymentIntent = await stripe.paymentIntents.create(
       {
         amount: subTotal * 100,
@@ -40,7 +43,7 @@ router.post("/placeorder", async (req, res) => {
           country: token.card.address_country,
           pincode: token.card.address_zip,
         },
-        transactionId: payment.source.Id,
+        transactionId:token.card.id,
       });
       newOrder.save();
       res.send("Payment successful");
