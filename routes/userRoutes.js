@@ -51,16 +51,17 @@ router.get("/getallusers", async (req, res) => {
   }
 });
 
-router.post('/deleteuser', async(req, res) => {
+router.post('/deleteuser', async (req, res) => {
   const userid = req.body.userid
   try {
-    if(userid ==="63c0f256d0b31a70669f2183" || userid ==="63c0f2d2d0b31a70669f218c"){
+    if (userid === "63c0f256d0b31a70669f2183" || userid === "63c0f2d2d0b31a70669f218c") {
       res.status(401).send("Unauthorized")
+    } else {
+      await User.findOneAndDelete({ _id: userid })
+      res.status(200).send("User Deleted")
     }
-    await User.findOneAndDelete({_id: userid})
-    res.status(200).send("User Deleted")
   } catch (error) {
-    res.status(404).json({ message: error.stack });    
+    res.status(404).json({ message: error.stack });
   }
 })
 
